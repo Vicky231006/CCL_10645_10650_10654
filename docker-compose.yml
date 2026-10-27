@@ -1,0 +1,67 @@
+# Resumo — full stack for local/staging use.
+#   docker compose up --build
+# Frontend: http://localhost:8080   API docs: http://localhost:8080/api/docs
+#
+# Secrets are read from a root .env file (see .env.example). Nothing here is
+# hardcoded; override any value in .env or your shell environment.
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-resumo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-resumo}
+      POSTGRES_DB: ${POSTGRES_DB:-resumo}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-resumo}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+      DEBUG: ${DEBUG:-false}
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://${POSTGRES_USER:-resumo}:${POSTGRES_PASSWORD:-resumo}@db:5432/${POSTGRES_DB:-resumo}}
+      RUN_MIGRATIONS: "1"
+      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-http://localhost:8080}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      STORAGE_BACKEND: ${STORAGE_BACKEND:-local}
+      LOCAL_STORAGE_DIR: /app/storage
+      # AI is optional. Set LLM_PROVIDER=ollama and OLLAMA_BASE_URL to use a model.
+      LLM_PROVIDER: ${LLM_PROVIDER:-none}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen2.5:1.5b}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      # S3 (when STORAGE_BACKEND=s3)
+      S3_BUCKET: ${S3_BUCKET:-}
+      S3_REGION: ${S3_REGION:-ap-south-1}
+    volumes:
+      - storage:/app/storage
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE: /api/v1
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  storage:

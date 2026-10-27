@@ -1,0 +1,26 @@
+Asha Rao
+asha.rao@example.com | +91 90000 00000 | Bengaluru, India
+github.com/asha-rao | linkedin.com/in/asha-rao
+
+Summary
+Final-year B.Tech Computer Science student focused on backend engineering. Comfortable building APIs in Python.
+
+Education
+Indian Institute of Technology, Example — B.Tech Computer Science
+2022 - 2026
+
+Experience
+Software Engineering Intern — Acme Systems
+May 2025 - Jul 2025
+• Worked on a REST API in Python that reduced report generation time by 40%.
+• Responsible for writing unit tests and documentation for the billing module.
+
+Projects
+Resumo — FastAPI, React
+• Implemented a parser registry supporting 10 resume formats.
+• Designed a deterministic scoring engine with transparent rules.
+
+Skills
+Languages: Python, TypeScript, SQL
+Frameworks: FastAPI, React
+Tools: Git, Docker

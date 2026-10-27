@@ -1,0 +1,66 @@
+"""ORM model registry — importing this package registers all tables."""
+from app.models.base import TimestampMixin, UUIDMixin, utcnow
+from app.models.career import (
+    CompanyCitation,
+    CompanyResearch,
+    GeneratedAsset,
+    LearningResource,
+    PortfolioPage,
+    ProjectEvidence,
+    ProjectPlan,
+    Roadmap,
+    RoadmapMilestone,
+    SkillProfile,
+    TailorSuggestion,
+)
+from app.models.job import (
+    Application,
+    JobDescription,
+    JobListing,
+    KeywordEvidence,
+    MatchReport,
+    SavedJob,
+)
+from app.models.resume import (
+    AnalysisFinding,
+    AnalysisRun,
+    Resume,
+    ResumeSection,
+    ResumeVersion,
+    UploadedFile,
+)
+from app.models.user import AuditEvent, BackgroundJob, ConsentRecord, Profile, User
+
+__all__ = [
+    "TimestampMixin",
+    "UUIDMixin",
+    "utcnow",
+    "User",
+    "Profile",
+    "ConsentRecord",
+    "AuditEvent",
+    "BackgroundJob",
+    "Resume",
+    "ResumeVersion",
+    "ResumeSection",
+    "UploadedFile",
+    "AnalysisRun",
+    "AnalysisFinding",
+    "JobDescription",
+    "MatchReport",
+    "KeywordEvidence",
+    "JobListing",
+    "SavedJob",
+    "Application",
+    "SkillProfile",
+    "Roadmap",
+    "RoadmapMilestone",
+    "LearningResource",
+    "ProjectPlan",
+    "ProjectEvidence",
+    "PortfolioPage",
+    "GeneratedAsset",
+    "TailorSuggestion",
+    "CompanyResearch",
+    "CompanyCitation",
+]

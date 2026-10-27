@@ -1,0 +1,66 @@
+# ==============================================================================
+# Resumo — Path B Multi-Tier AWS Deployment Compose Configuration
+# ==============================================================================
+# Architecture:
+#   - Amazon RDS PostgreSQL 16 (Managed Database in Private Subnet)
+#   - Amazon S3 (Object Storage for resumes & exports)
+#   - Ollama AI Service (Running qwen2.5:1.5b with 3GB Swap on EC2)
+#   - Docker Container 1: resumo-frontend (Nginx on Port 80)
+#   - Docker Container 2: resumo-backend (FastAPI / Uvicorn on Port 8000)
+# ==============================================================================
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: resumo-ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+
+  backend:
+    build:
+      context: ./backend
+    container_name: resumo-backend
+    depends_on:
+      - ollama
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+      DEBUG: ${DEBUG:-false}
+      SECRET_KEY: ${SECRET_KEY}
+      DATABASE_URL: ${DATABASE_URL}
+      RUN_MIGRATIONS: "1"
+      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      STORAGE_BACKEND: ${STORAGE_BACKEND:-s3}
+      LOCAL_STORAGE_DIR: /app/storage
+      S3_BUCKET: ${S3_BUCKET:-}
+      S3_REGION: ${S3_REGION:-ap-south-1}
+      LLM_PROVIDER: ollama
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_MODEL: qwen2.5:1.5b
+      LLM_TIMEOUT_SECONDS: 180
+      JOB_RUNNER: ${JOB_RUNNER:-thread}
+      SQS_QUEUE_URL: ${SQS_QUEUE_URL:-}
+    volumes:
+      - app_storage:/app/storage
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE: /api/v1
+    container_name: resumo-frontend
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+    restart: unless-stopped
+
+volumes:
+  app_storage:
+  ollama_data:

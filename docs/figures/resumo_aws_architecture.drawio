@@ -1,0 +1,124 @@
+<mxfile host="app.diagrams.net" modified="2026-10-24T16:30:00.000Z" agent="Mozilla/5.0" version="24.0.0" type="device">
+  <diagram id="resumo-aws-architecture" name="Resumo AWS Cloud Architecture (Path B)">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title Block -->
+        <mxCell id="title" value="&lt;b style='font-size: 20px;'&gt;Resumo — Cloud-Native Multi-Tier AWS Architecture (Path B Managed Deployment)&lt;/b&gt;&lt;br&gt;&lt;span style='font-size: 13px; color: #475569;'&gt;Decoupled N-Services on AWS ap-south-1 (Mumbai): VPC Tier Isolation, Amazon Bedrock GenAI &amp; Zero-Secret Governance&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#CBD5E1;align=left;spacingLeft=20;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="1560" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Client Browser -->
+        <mxCell id="client" value="&lt;b&gt;Client Web Browser&lt;/b&gt;&lt;br&gt;React 18 SPA (Desktop / Mobile)&lt;br&gt;httpOnly JWT Session + CSRF Double-Submit" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#94A3B8;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="80" y="130" width="320" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- CloudFront CDN -->
+        <mxCell id="cloudfront" value="&lt;b&gt;Amazon CloudFront CDN (Global Edge)&lt;/b&gt;&lt;br&gt;• Edge Caching for Static SPA Assets&lt;br&gt;• Wildcard SSL/TLS Termination (*.cloudfront.net)&lt;br&gt;• Dynamic /api/* Proxy Directly to EC2 Origin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E5F5;strokeColor=#7E22CE;strokeWidth=2;align=left;spacingLeft=15;" vertex="1" parent="1">
+          <mxGeometry x="80" y="240" width="320" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- Edge to CloudFront arrow -->
+        <mxCell id="edge_arrow" value="HTTPS :443" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#7E22CE;strokeWidth=2;fontStyle=1;" edge="1" parent="1" source="client" target="cloudfront">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- VPC Container -->
+        <mxCell id="vpc" value="&lt;b style='font-size: 15px;'&gt;Amazon Virtual Private Cloud (VPC) — Region: ap-south-1 (Mumbai) | CIDR: 10.0.0.0/16&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#2563EB;strokeWidth=2;dashed=0;align=left;verticalAlign=top;spacingLeft=20;spacingTop=15;" vertex="1" parent="1">
+          <mxGeometry x="40" y="370" width="1080" height="570" as="geometry" />
+        </mxCell>
+
+        <!-- Public Subnet -->
+        <mxCell id="pub_subnet" value="&lt;b&gt;Public Subnet (CIDR: 10.0.1.0/24) — Internet Gateway (IGW)&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=2;dashed=1;align=left;verticalAlign=top;spacingLeft=15;spacingTop=12;" vertex="1" parent="1">
+          <mxGeometry x="60" y="420" width="510" height="500" as="geometry" />
+        </mxCell>
+
+        <!-- EC2 Instance -->
+        <mxCell id="ec2" value="&lt;b&gt;Amazon EC2 Instance (t3.micro / t4g.micro)&lt;/b&gt;&lt;br&gt;Elastic IP Attached | IAM Profile: resumo-ec2-role | Security Group: resumo-web-sg" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#EA580C;strokeWidth=2;align=left;verticalAlign=top;spacingLeft=15;spacingTop=12;" vertex="1" parent="1">
+          <mxGeometry x="80" y="465" width="470" height="435" as="geometry" />
+        </mxCell>
+
+        <!-- Nginx Container -->
+        <mxCell id="nginx" value="&lt;b&gt;Docker Container: resumo-frontend (Nginx :80)&lt;/b&gt;&lt;br&gt;• Serves Production Compiled React 18 SPA&lt;br&gt;• Reverse-proxies /api/ calls to FastAPI backend on :8000&lt;br&gt;• Single-Origin Preserves Secure httpOnly Session Cookies" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;strokeWidth=1.5;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="100" y="525" width="430" height="85" as="geometry" />
+        </mxCell>
+
+        <!-- FastAPI Container -->
+        <mxCell id="fastapi" value="&lt;b&gt;Docker Container: resumo-backend (FastAPI / Python 3.13 :8000)&lt;/b&gt;&lt;br&gt;• Universal Parsing Registry (PDF, DOCX, TXT, MD, RTF, ODT, HTML, Images)&lt;br&gt;• Deterministic Quality Scoring Engine (6 Weighted Categories, 0–10 Scale)&lt;br&gt;• Evidence-Based Job Description Matcher (Semantic Cosine + Exact Overlap)&lt;br&gt;• Truth-Preserving AI Orchestrator (Subset Fact Verification Guardrails)&lt;br&gt;• Document Export Engine (PDF via ReportLab, DOCX, LaTeX, TXT)&lt;br&gt;• Boot-Time Database Migration Manager (Alembic Head Auto-Execution)&lt;br&gt;• Boto3 SDK Clients for S3, Bedrock Runtime, SQS Queue &amp; SSM Parameter Store" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#2563EB;strokeWidth=1.5;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="100" y="650" width="430" height="230" as="geometry" />
+        </mxCell>
+
+        <!-- Nginx to FastAPI arrow -->
+        <mxCell id="nginx_fastapi" value="Docker Proxy (:8000)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#2563EB;strokeWidth=2;fontStyle=1;" edge="1" parent="1" source="nginx" target="fastapi">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- CloudFront to EC2 arrow -->
+        <mxCell id="cf_ec2" value="HTTP :80 Ingress" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#EA580C;strokeWidth=2;fontStyle=1;" edge="1" parent="1" source="cloudfront" target="nginx">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Private Subnet -->
+        <mxCell id="priv_subnet" value="&lt;b&gt;Private Subnet (CIDR: 10.0.2.0/24) — Isolated DB Tier (Zero Internet Routes)&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECFDF5;strokeColor=#059669;strokeWidth=2;dashed=1;align=left;verticalAlign=top;spacingLeft=15;spacingTop=12;" vertex="1" parent="1">
+          <mxGeometry x="600" y="420" width="500" height="500" as="geometry" />
+        </mxCell>
+
+        <!-- Amazon RDS PostgreSQL -->
+        <mxCell id="rds" value="&lt;b&gt;Amazon RDS for PostgreSQL 16 (db.t3.micro)&lt;/b&gt;&lt;br&gt;&lt;b style='color:#DC2626;'&gt;Security Group resumo-db-sg: Inbound Port 5432 Restricted Strictly to EC2 SG&lt;/b&gt;&lt;br&gt;• Public Access: NO (Completely Isolated from the Internet)&lt;br&gt;• 20 GiB gp3 Storage (Autoscaling Disabled to Enforce Credit Cap)&lt;br&gt;• Automated Daily Snapshots &amp; Point-in-Time Recovery (PITR)&lt;br&gt;• Relational Schema: Users, Profiles, Resumes, Analyses, Matches, Roadmaps&lt;br&gt;• High-Performance psycopg3 Binary Connection Pooling via SQLAlchemy 2.0" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0284C7;strokeWidth=2;align=left;spacingLeft=15;" vertex="1" parent="1">
+          <mxGeometry x="620" y="480" width="460" height="415" as="geometry" />
+        </mxCell>
+
+        <!-- Cross-Subnet DB Arrow -->
+        <mxCell id="db_arrow" value="SQLAlchemy (Port 5432 Inbound Only)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#0284C7;strokeWidth=3;fontStyle=1;" edge="1" parent="1" source="fastapi" target="rds">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Right Side: Managed Cloud Services -->
+        <!-- S3 -->
+        <mxCell id="s3" value="&lt;b&gt;Amazon S3 Bucket (resumo-files-*)&lt;/b&gt;&lt;br&gt;• Persistent Object Storage for Original Résumés (PDF/DOCX)&lt;br&gt;• Generated Multi-Format Export Artifacts&lt;br&gt;• Automated PostgreSQL Daily Backup Dumps&lt;br&gt;• Server-Side Encryption (SSE-S3 Enabled)&lt;br&gt;• Block All Public Access: ON (Streamed via Auth Routes)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;strokeWidth=2;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="130" width="440" height="150" as="geometry" />
+        </mxCell>
+
+        <!-- Bedrock -->
+        <mxCell id="bedrock" value="&lt;b&gt;Amazon Bedrock (Serverless Foundation Models)&lt;/b&gt;&lt;br&gt;• Models: Anthropic Claude 3.5 Sonnet / Amazon Titan&lt;br&gt;• Native Boto3 Bedrock Runtime Converse API&lt;br&gt;• IAM Role Authorization (Zero Static API Keys on Disk)&lt;br&gt;• Truth-Preserving Verification Guardrails (Subset Fact Checks)&lt;br&gt;• Tailored Bullet Rewriting &amp; Project Roadmap Synthesis" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F3FF;strokeColor=#7C3AED;strokeWidth=2;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="310" width="440" height="160" as="geometry" />
+        </mxCell>
+
+        <!-- SSM Parameter Store -->
+        <mxCell id="ssm" value="&lt;b&gt;AWS SSM Parameter Store (Secrets Governance)&lt;/b&gt;&lt;br&gt;• Standard Tier (100% Free Lifetime Allowance)&lt;br&gt;• Type: SecureString Encrypted via AWS KMS&lt;br&gt;• Stores /resumo/SECRET_KEY &amp; RDS DB Password&lt;br&gt;• Injected into Process Memory via fetch-secrets.sh on Boot&lt;br&gt;• Zero Hardcoded Credentials in Source Code or Disk" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDFA;strokeColor=#0D9488;strokeWidth=2;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="500" width="440" height="150" as="geometry" />
+        </mxCell>
+
+        <!-- SQS Queue -->
+        <mxCell id="sqs" value="&lt;b&gt;Amazon SQS (resumo-jobs Task Queue)&lt;/b&gt;&lt;br&gt;• Asynchronous Decoupling for Heavy Document Structuring&lt;br&gt;• Long-Polling (WaitTimeSeconds: 20s) with Dead-Letter Queue (DLQ)&lt;br&gt;• Batch Résumé Tailoring &amp; Semantic Quality Evaluation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDF2F8;strokeColor=#DB2777;strokeWidth=2;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="680" width="440" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- Arrows from FastAPI to Services -->
+        <mxCell id="arrow_s3" value="Boto3 S3 (Put/Get)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#16A34A;strokeWidth=2;fontStyle=1;" edge="1" parent="1" source="fastapi" target="s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="arrow_bedrock" value="Boto3 Converse API" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#7C3AED;strokeWidth=2;fontStyle=1;" edge="1" parent="1" source="fastapi" target="bedrock">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="arrow_ssm" value="IAM Session (KMS Decrypt)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#0D9488;strokeWidth=2;fontStyle=1;" edge="1" parent="1" source="fastapi" target="ssm">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="arrow_sqs" value="Boto3 SQS (Send/Receive)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#DB2777;strokeWidth=2;fontStyle=1;" edge="1" parent="1" source="fastapi" target="sqs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Bottom Governance Banner -->
+        <mxCell id="gov" value="&lt;b style='font-size: 14px;'&gt;Security, Observability &amp; Cost Governance (Cross-Cutting Foundations)&lt;/b&gt;&lt;br&gt;&lt;table width='100%' style='font-size: 11px;'&gt;&lt;tr&gt;&lt;td width='25%'&gt;&lt;b&gt;AWS IAM Least Privilege&lt;/b&gt;&lt;br&gt;• Role: resumo-ec2-role&lt;br&gt;• Zero static keys on EC2&lt;br&gt;• Scoped to S3, SSM, Bedrock&lt;/td&gt;&lt;td width='25%'&gt;&lt;b&gt;Amazon CloudWatch&lt;/b&gt;&lt;br&gt;• Centralized stdout/stderr logs&lt;br&gt;• EC2 &amp; RDS status check alarms&lt;br&gt;• 7-day log retention&lt;/td&gt;&lt;td width='25%'&gt;&lt;b&gt;Amazon SNS Alerts&lt;/b&gt;&lt;br&gt;• Topic: resumo-alerts&lt;br&gt;• Instant email on host outage&lt;br&gt;• Automated triage alerts&lt;/td&gt;&lt;td width='25%'&gt;&lt;b&gt;AWS Budgets ($1.00 Alert)&lt;/b&gt;&lt;br&gt;• Promotional credit monitoring&lt;br&gt;• Zero unexpected bills&lt;br&gt;• Public subnet avoids NAT GW&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;strokeWidth=2;align=left;spacingLeft=15;" vertex="1" parent="1">
+          <mxGeometry x="40" y="960" width="1560" height="150" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
